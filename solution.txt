@@ -1,0 +1,25 @@
+from collections import deque
+
+def canFinish(numCourses, prerequisites):
+    adj = {i: [] for i in range(numCourses)}
+    indegree = [0] * numCourses
+
+    for course, pre in prerequisites:
+        adj[pre].append(course)
+        indegree[course] += 1
+
+    queue = deque([i for i in range(numCourses) if indegree[i] == 0])
+    count = 0
+
+    while queue:
+        current = queue.popleft()
+        count += 1
+        for neighbor in adj[current]:
+            indegree[neighbor] -= 1
+            if indegree[neighbor] == 0:
+                queue.append(neighbor)
+
+    return count == numCourses
+
+print(canFinish(2, [[1,0]]))      
+print(canFinish(2, [[1,0],[0,1]]))
